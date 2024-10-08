@@ -1,5 +1,4 @@
-package io.takima.demo;
-
+package com.takima.backskeleton.models;
 public class Cellule {
     int id;
     int position_x;

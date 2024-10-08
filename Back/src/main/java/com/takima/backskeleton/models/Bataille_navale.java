@@ -1,16 +1,16 @@
-package io.takima.demo;
+package com.takima.backskeleton.models;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
-import javax.annotation.PostConstruct;
+
 
 @SpringBootApplication
-public class HelloWorldApplication {
+public class Bataille_navale {
 
-	public static void main(String[] args) {
-		SpringApplication.run(HelloWorldApplication.class, args);
+    public static void main(String[] args) {
+        SpringApplication.run(Bataille_navale.class, args);
 
-	}
+    }
 }

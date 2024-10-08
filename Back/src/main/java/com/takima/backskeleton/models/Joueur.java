@@ -1,5 +1,4 @@
-package io.takima.demo;
-
+package com.takima.backskeleton.models;
 public class Joueur {
     int id;
     String pseudo;
