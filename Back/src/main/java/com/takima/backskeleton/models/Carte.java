@@ -8,4 +8,8 @@ public class Carte {
         this.nom = nom;
         this.grille = grille;
     }
+
+    public void Toucher(Cellule[] grille, int i) {
+        grille[i].bateauOccupe=null;
+    }
 }
