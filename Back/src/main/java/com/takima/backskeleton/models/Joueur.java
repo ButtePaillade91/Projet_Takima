@@ -3,10 +3,12 @@ public class Joueur {
     int id;
     String pseudo;
     Projectile[] munitions;
-    public Joueur(int id, String pseudo, Projectile[] munitions) {
+    Bateau[] bateaux;
+    public Joueur(int id, String pseudo, Projectile[] munitions, Bateau[] bateaux) {
         this.id = id;
         this.pseudo = pseudo;
         this.munitions = munitions;
+        this.bateaux = bateaux;
     }
 
     public int tirer (int position_x, int position_y, Carte map, Projectile[] munitions, int munitionUtilisee) {
