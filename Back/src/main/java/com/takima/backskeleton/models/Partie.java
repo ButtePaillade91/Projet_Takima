@@ -18,8 +18,16 @@ public class Partie {
         munitionsJ1[2] = new Projectile(2, 2, "Bombe à fragments");
         Projectile[] munitionsJ2 = munitionsJ1;
 
+        Bateau[] bateauxJ1 = new Bateau[5];
+        bateauxJ1[0] = new Bateau(0, 5, 5, "Porte-avions");
+        bateauxJ1[1] = new Bateau(1, 4, 4, "Cuirassé");
+        bateauxJ1[2] = new Bateau(2, 3, 3, "Sous-marin");
+        bateauxJ1[3] = new Bateau(3, 3, 3, "Contre-torpilleur");
+        bateauxJ1[4] = new Bateau(4, 2, 2, "Garde-côte");
+        Bateau[] bateauxJ2 = bateauxJ1;
+
         joueurs = new Joueur[2];
-        joueurs[0] = new Joueur(0, pseudo1, munitionsJ1);
-        joueurs[1] = new Joueur(1, pseudo2, munitionsJ2);
+        joueurs[0] = new Joueur(0, pseudo1, munitionsJ1, bateauxJ1);
+        joueurs[1] = new Joueur(1, pseudo2, munitionsJ2, bateauxJ2);
     }
 }
