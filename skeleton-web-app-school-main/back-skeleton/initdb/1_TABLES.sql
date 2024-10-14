@@ -1,30 +1,19 @@
-create table students
+create table Joueur
 (
     id SERIAL PRIMARY KEY,
-    first_name TEXT not null,
-    last_name TEXT not null,
-    birthdate date null,
-    major_id int null,
-    image bytea null
+    Pseudo TEXT not null
 );
 
-create table majors
+create table Carte
 (
     id SERIAL PRIMARY KEY,
-    name TEXT not null,
+    nom TEXT not null,
     description TEXT not null
 );
 
-create table courses
+create table Bateau
 (
     id SERIAL PRIMARY KEY,
-    name TEXT not null,
-    hours int not null
-);
-
-create table student_course
-(
-    id SERIAL PRIMARY KEY,
-    student_id int not null,
-    course_id int not null
+    nom TEXT not null,
+    taille int not null
 );
