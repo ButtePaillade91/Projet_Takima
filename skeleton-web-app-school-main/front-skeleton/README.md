@@ -8,6 +8,6 @@
 
 Lancer `npm i`
 
-## Pour lancer le projet
+## Pour lancen
 
 Lancer `npm start` et se rendre sur `http://localhost:4200/`
