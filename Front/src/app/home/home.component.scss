@@ -41,4 +41,29 @@
       margin-left: 15px;
     }
   }
+  .battleship-board {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px;
+  }
+
+  .row {
+    display: flex;
+  }
+
+  .cell {
+    width: 40px; /* Largeur de chaque case */
+    height: 40px; /* Hauteur de chaque case */
+    background-color: grey; /* Couleur de fond */
+    border: 1px solid #ccc; /* Bordure */
+    margin: 1px; /* Espacement entre les boutons */
+    cursor: pointer; /* Curseur en main au survol */
+    transition: background-color 0.3s; /* Transition pour l'effet au survol */
+  }
+
+  .cell:hover {
+    background-color: darkgrey; /* Couleur au survol */
+  }
+
 }

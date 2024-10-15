@@ -4,10 +4,21 @@ nav {
   height: 80px;
   background: linear-gradient(to right, theme.$common-purple, theme.$common-red);
 
+  .title {
+    font-family: Caveat, sans-serif;
+    font-size: 4em;
+    font-weight: 700;
+    color: white; /* Met le texte en blanc */
+    margin: 0; /* Enlève les marges */
+    text-align: center; /* Centre le texte */
+    flex: 1; /* Permet de prendre de l'espace pour centrer le titre */
+  }
+
   div {
     height: 100%;
     display: flex;
     align-items: center;
+    justify-content: space-between; /* Ajout pour espacer les éléments */
 
     img {
       margin-left: 20px;
@@ -22,10 +33,9 @@ nav {
 }
 
 mat-nav-list {
-  margin-left: 50px;
+  margin-right: 20px; /* Ajuste la marge à droite */
   display: flex;
   flex-direction: row;
-  width: 250px;
 
   span,
   a {
@@ -38,3 +48,4 @@ mat-nav-list {
     }
   }
 }
+
