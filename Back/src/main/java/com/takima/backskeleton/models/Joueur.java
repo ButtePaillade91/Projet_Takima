@@ -1,17 +1,44 @@
 package com.takima.backskeleton.models;
+
+import jakarta.persistence.*;
+
+import java.util.List;
+
+@Entity
+@Table(name = "joueur")
 public class Joueur {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
     String pseudo;
-    Projectile[] munitions;
-    Bateau[] bateaux;
-    public Joueur(int id, String pseudo, Projectile[] munitions, Bateau[] bateaux) {
+
+    @OneToMany
+    @JoinTable(
+            name = "contient",
+            joinColumns = @JoinColumn(name = "id_joueur"),
+            inverseJoinColumns = @JoinColumn(name = "id_projectile")
+    )
+    private List<Projectile> munitions;
+
+    @OneToMany
+    @JoinTable(
+            name = "possede",
+            joinColumns = @JoinColumn(name = "id_joueur"),
+            inverseJoinColumns = @JoinColumn(name = "id_bateau")
+    )
+    private List<Bateau> bateaux;
+
+    public Joueur() {}
+    public Joueur(int id, String pseudo, List<Projectile> munitions, List<Bateau> bateaux) {
         this.id = id;
         this.pseudo = pseudo;
         this.munitions = munitions;
         this.bateaux = bateaux;
     }
 
-    public int tirer (int position_x, int position_y, Carte map, Projectile[] munitions, int munitionUtilisee) {
+
+
+    public int tirer (int position_x, int position_y, Carte map, List<Projectile> munitions, int munitionUtilisee) {
         int resultat = 0;
         int cellule = position_y*10+position_x;
 
@@ -31,10 +58,10 @@ public class Joueur {
                 return resultat;//dans l'eau
             }
         } else if (munitionUtilisee==2) {
-            munitions[1].quantite--;
+            munitions.get(1).quantite--;
             return resultat;
         } else {
-            munitions[2].quantite--;
+            munitions.get(2).quantite--;
             tirBombeFragments(position_x, position_y, map);
             resultat=3;
             return resultat;

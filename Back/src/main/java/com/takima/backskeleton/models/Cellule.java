@@ -4,6 +4,7 @@ public class Cellule {
     int position_x;
     int position_y;
     Bateau bateauOccupe;
+
     public Cellule(int id, int position_x, int position_y, Bateau bateauOccupe) {
         this.id = id;
         this.position_x = position_x;
