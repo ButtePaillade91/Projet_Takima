@@ -1,4 +1,4 @@
-package com.takima.backskeleton.services.impl;
+package com.takima.backskeleton.services;
 
 import com.takima.backskeleton.models.Joueur;
 import com.takima.backskeleton.models.Carte;

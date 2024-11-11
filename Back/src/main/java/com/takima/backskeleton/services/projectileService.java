@@ -1,9 +1,7 @@
-package com.takima.backskeleton.services.impl;
+package com.takima.backskeleton.services;
 
 
-import com.takima.backskeleton.models.Bateau;
 import com.takima.backskeleton.models.Projectile;
-import com.takima.backskeleton.repository.bateauRepository;
 import com.takima.backskeleton.repository.projectileRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
