@@ -1,14 +1,26 @@
 <span class="title">Bonjour à vous !</span>
 <div>
-  <span class="welcome">Bienvenue sur ce super jeu de bataille Navale </span>
+  <span class="welcome">Bienvenue sur ce super jeu de bataille Navale</span>
 </div>
 <img src="assets/Bateau_Proffil.png" height="100">
 
 <span class="title">Nouvelle Partie !</span>
 <button type="button" class="btn btn-success">ICI !</button>
 
-<div class="battleship-board">
-  <div class="row" *ngFor="let row of [].constructor(10); let i = index">
-    <button class="cell" *ngFor="let cell of [].constructor(10); let j = index" (click)="handleClick(i, j)"></button>
+<!-- Conteneur des grilles -->
+<div class="boards-container">
+  <!-- Première grille -->
+  <div class="battleship-board">
+    <div class="row" *ngFor="let row of [].constructor(10); let i = index">
+      <button class="cell" *ngFor="let cell of [].constructor(10); let j = index" (click)="handleClick(i, j)"></button>
+    </div>
+  </div>
+
+  <!-- Deuxième grille -->
+  <div class="battleship-board">
+    <div class="row" *ngFor="let row of [].constructor(10); let i = index">
+      <button class="cell" *ngFor="let cell of [].constructor(10); let j = index" (click)="handleClick(i, j)"></button>
+    </div>
   </div>
 </div>
+

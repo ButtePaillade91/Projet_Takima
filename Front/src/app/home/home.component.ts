@@ -1,18 +1,13 @@
-import { Component, OnInit } from "@angular/core"
+import { Component } from '@angular/core';
 
 @Component({
-  selector: "home",
-  templateUrl: "./home.component.html",
-  styleUrls: ["./home.component.scss"],
+  selector: 'app-home',
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent implements OnInit {
-  handleClick(row: number, col: number) {
-    console.log(`Cell clicked: Row ${row}, Column ${col}`);
-    // Ajoute ici la logique pour le jeu (par exemple, marquer un coup)
+export class HomeComponent {
+  // Méthode basique pour gérer les clics sur une cellule
+  handleClick(i: number, j: number): void {
+    console.log(`Cellule cliquée : Ligne ${i}, Colonne ${j}`);
   }
-
-  constructor() {}
-
-  ngOnInit(): void {}
 }
-

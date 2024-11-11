@@ -66,4 +66,29 @@
     background-color: darkgrey; /* Couleur au survol */
   }
 
+  .boards-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px; /* Espace entre les grilles */
+    margin-top: 20px;
+  }
+
+  .battleship-board {
+    display: grid;
+    grid-template-rows: repeat(10, 1fr);
+    grid-template-columns: repeat(10, 1fr);
+    gap: 2px; /* Espace entre les cellules */
+  }
+
+  .cell {
+    width: 30px;
+    height: 30px;
+    background-color: lightblue;
+    border: 1px solid #000;
+  }
+
+  .row {
+    display: contents;
+  }
+
 }
