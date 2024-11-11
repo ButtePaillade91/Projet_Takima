@@ -1,19 +1,22 @@
-package com.takima.backskeleton.services;
+package com.takima.backskeleton.services;  // Vérifiez que c'est bien le bon package
 
-import com.takima.backskeleton.models.*;
+import com.takima.backskeleton.models.Bateau;
+import com.takima.backskeleton.models.Carte;
+import com.takima.backskeleton.models.Joueur;
+import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
-public class BatailleNavaleGame {
+@Service
+public class GameService {
 
     private Joueur joueur;
     private Joueur ordinateur;
     private Carte carteJoueur;
     private Carte carteOrdinateur;
 
-    public BatailleNavaleGame(Joueur joueur, Joueur ordinateur, Carte carteJoueur, Carte carteOrdinateur) {
+    public GameService(Joueur joueur, Joueur ordinateur, Carte carteJoueur, Carte carteOrdinateur) {
         this.joueur = joueur;
         this.ordinateur = ordinateur;
         this.carteJoueur = carteJoueur;
@@ -25,6 +28,7 @@ public class BatailleNavaleGame {
 
         shipPlacement();
 
+        // Boucle de jeu où le joueur et l'ordinateur s'alternent
         while (true) {
             if (playerTurn()) {
                 System.out.println("Vous avez gagné !");
@@ -37,37 +41,39 @@ public class BatailleNavaleGame {
         }
     }
 
-    private boolean playerTurn() {
+    // La méthode playerTurn() prend maintenant les entrées de l'utilisateur directement
+    public boolean playerTurn() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Votre tour : ");
+        System.out.println("Votre tour: Entrez les coordonnées (x, y) et le type de munition :");
 
-        System.out.print("Entrez la position X : ");
+        System.out.print("Coordonnée x: ");
         int x = scanner.nextInt();
 
-        System.out.print("Entrez la position Y : ");
+        System.out.print("Coordonnée y: ");
         int y = scanner.nextInt();
 
-        System.out.print("Choisissez la munition (1: Basique, 2: Bombe) : ");
+        System.out.print("Type de munition: ");
         int munitionType = scanner.nextInt();
 
+        // Appel de la méthode tir avec les entrées de l'utilisateur
         int result = joueur.tirer(x, y, carteOrdinateur, joueur.getMunitions(), munitionType);
-
         displayShotResult(result);
-        return checkVictory(carteOrdinateur);
+
+        return checkVictory(carteOrdinateur); // Vérifie si l'ordinateur a perdu
     }
 
-    private boolean computerTurn() {
+    public boolean computerTurn() {
         System.out.println("Tour de l'ordinateur...");
 
-        // Placeholder for AI decision-making logic
-        int x = new Random().nextInt(10);
-        int y = new Random().nextInt(10);
-        int munitionType = 1; // Placeholder for AI munition selection
+        // Logique pour déterminer les coordonnées du tir de l'ordinateur
+        int x = new Random().nextInt(10); // Coordonnée aléatoire entre 0 et 9
+        int y = new Random().nextInt(10); // Coordonnée aléatoire entre 0 et 9
+        int munitionType = 1; // Exemple de type de munition
 
         int result = ordinateur.tirer(x, y, carteJoueur, ordinateur.getMunitions(), munitionType);
-
         displayShotResult(result);
-        return checkVictory(carteJoueur);
+
+        return checkVictory(carteJoueur); // Vérifie si le joueur a perdu
     }
 
     private void displayShotResult(int result) {
@@ -91,76 +97,86 @@ public class BatailleNavaleGame {
     }
 
     private boolean checkVictory(Carte carte) {
-        for (Cellule[][] cellule : carte.grille) {
-            if (cellule.bateauOccupe != null) {
-                return false;
+        // Vérifie si tous les bateaux ont été coulés
+        for (int i = 0; i < carte.grille.length; i++) {
+            for (int j = 0; j < carte.grille[i].length; j++) {
+                if (carte.grille[i][j].bateauOccupe != null) {
+                    return false; // Il reste des bateaux, donc pas de victoire
+                }
+            }
+        }
+        return true; // Tous les bateaux sont coulés, victoire
+    }
+
+    public void shipPlacement() {
+        Random rand = new Random();
+        int[] taillesBateaux = {5, 4, 3, 3, 2};
+
+        for (int i = 0; i < taillesBateaux.length; i++) {
+            Bateau bateau = new Bateau();
+            bateau.setTaille(taillesBateaux[i]);
+            bateau.setVie(taillesBateaux[i]);
+            bateau.setType_bateau("Bateau" + (i + 1));
+
+            boolean bateauPlace = false;
+            while (!bateauPlace) {
+                int x = rand.nextInt(10);
+                int y = rand.nextInt(10);
+                int orientation = rand.nextInt(2);
+
+                if (isValidPlacement(x, y, orientation, bateau.getTaille(), carteOrdinateur)) {
+                    placeShip(x, y, orientation, bateau, carteOrdinateur);
+                    bateauPlace = true;
+                }
+            }
+            bateau.setJoueur(joueur);
+        }
+    }
+
+    private boolean isValidPlacement(int x, int y, int orientation, int taille, Carte carte) {
+        if (orientation == 0) {
+            if (x + taille > 10) return false;
+            for (int i = 0; i < taille; i++) {
+                if (carte.grille[x + i][y].bateauOccupe != null) {
+                    return false;
+                }
+            }
+        } else {
+            if (y + taille > 10) return false;
+            for (int i = 0; i < taille; i++) {
+                if (carte.grille[x][y + i].bateauOccupe != null) {
+                    return false;
+                }
             }
         }
         return true;
     }
 
-    public void shipPlacement() {
-        Random rand = new Random();
-
-        // Liste de tailles de bateaux à placer (exemple)
-        int[] taillesBateaux = {5, 4, 3, 3, 2}; // Par exemple, 5, 4, 3, 3, 2 unités de taille pour les bateaux
-
-        for (int i = 0; i < taillesBateaux.length; i++) {
-            Bateau bateau = new Bateau();
-            bateau.setTaille(taillesBateaux[i]);
-            bateau.setVie(taillesBateaux[i]); // La vie d'un bateau est égale à sa taille
-            bateau.setType_bateau("Bateau" + (i + 1)); // Type de bateau pour l'exemple
-
-            // Tentative de placement du bateau
-            boolean bateauPlace = false;
-            while (!bateauPlace) {
-                // Choisir une position aléatoire pour le bateau
-                int x = rand.nextInt(10); // X entre 0 et 9
-                int y = rand.nextInt(10); // Y entre 0 et 9
-                int orientation = rand.nextInt(2); // 0 = horizontal, 1 = vertical
-
-                // Vérifiez si l'emplacement est valide
-                if (isValidPlacement(x, y, orientation, bateau.getTaille(), carteOrdinateur)) {
-                    // Placez le bateau sur la carte
-                    placeShip(x, y, orientation, bateau, carteOrdinateur);
-                    bateauPlace = true; // Si le placement est valide, on arrête la boucle
-                }
-            }
-
-            // Associer le bateau à un joueur (par exemple, joueur ou ordinateur)
-            bateau.setJoueur(joueur); // Associez le bateau à l'utilisateur
-            // Vous pouvez aussi ajouter un moyen d'associer ces bateaux à l'ordinateur
-        }
-    }
-    private boolean isValidPlacement(int x, int y, int orientation, int taille, Carte carte) {
-        // Vérifiez que le bateau reste dans les limites de la carte
-        if (orientation == 0) { // horizontal
-            if (x + taille > 10) return false; // Hors des limites
-            for (int i = 0; i < taille; i++) {
-                if (carte.grille[x + i][y].bateauOccupe != null) {
-                    return false; // Si une cellule est déjà occupée, placement invalide
-                }
-            }
-        } else { // vertical
-            if (y + taille > 10) return false; // Hors des limites
-            for (int i = 0; i < taille; i++) {
-                if (carte.grille[x][y + i].bateauOccupe != null) {
-                    return false; // Si une cellule est déjà occupée, placement invalide
-                }
-            }
-        }
-        return true; // Placement valide
-    }
     private void placeShip(int x, int y, int orientation, Bateau bateau, Carte carte) {
-        if (orientation == 0) { // horizontal
+        if (orientation == 0) {
             for (int i = 0; i < bateau.getTaille(); i++) {
                 carte.grille[x + i][y].bateauOccupe = bateau;
             }
-        } else { // vertical
+        } else {
             for (int i = 0; i < bateau.getTaille(); i++) {
                 carte.grille[x][y + i].bateauOccupe = bateau;
             }
         }
     }
 
+    public void setJoueur(Joueur joueur) {
+        this.joueur = joueur;
+    }
+
+    public void setOrdinateur(Joueur ordinateur) {
+        this.ordinateur = ordinateur;
+    }
+
+    public void setCarteJoueur(Carte carteJoueur) {
+        this.carteJoueur = carteJoueur;
+    }
+
+    public void setCarteOrdinateur(Carte carteOrdinateur) {
+        this.carteOrdinateur = carteOrdinateur;
+    }
 }

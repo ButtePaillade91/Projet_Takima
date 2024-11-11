@@ -3,11 +3,13 @@ package com.takima.backskeleton.models;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.stereotype.Service;
 
 @Setter
 @Getter
 @Entity
 @Table(name = "carte")
+@Service
 public class Carte {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

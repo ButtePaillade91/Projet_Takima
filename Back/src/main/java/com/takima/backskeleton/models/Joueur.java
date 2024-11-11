@@ -6,11 +6,14 @@ import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 @Setter
 @Getter
 @Entity
 @Table(name = "joueur")
+@Service
 public class Joueur {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
