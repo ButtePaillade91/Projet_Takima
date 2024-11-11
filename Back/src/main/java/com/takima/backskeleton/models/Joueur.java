@@ -56,10 +56,9 @@ public class Joueur {
 
         if (munitionUtilisee == 1) { // Munition basique
             if (cellule.getBateauOccupe() != null) {
-                Bateau bateau = cellule.getBateauOccupe();
-                bateau.vie--;  // Réduction de la vie directement sans setter
+                cellule.getBateauOccupe().setVie(cellule.getBateauOccupe().getVie() - 1);
 
-                if (bateau.vie <= 0) {
+                if (cellule.getBateauOccupe().getVie() <= 0) {
                     map.Toucher(map.getGrille(), position_x, position_y);
                     resultat = 2; // Coulé
                 } else {

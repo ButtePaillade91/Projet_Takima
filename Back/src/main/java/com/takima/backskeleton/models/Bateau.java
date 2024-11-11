@@ -3,7 +3,9 @@ package com.takima.backskeleton.models;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
+@Setter
 @Getter
 @Entity
 @Table(name = "bateau")
