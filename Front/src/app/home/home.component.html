@@ -1,14 +1,34 @@
-<span class="title">Bonjour à vous !</span>
-<div>
-  <span class="welcome">Bienvenue sur ce super jeu de bataille Navale </span>
+<!-- Les textes et l'image apparaissent uniquement si la partie n'a pas encore commencé -->
+<div *ngIf="!gameStarted" class="welcome-container">
+  <span class="title">Bonjour à vous !</span>
+
+  <span class="welcome">Bienvenue sur ce super jeu de bataille Navale</span>
+
+  <img src="assets/Bateau_Profil.png" height="100">
+
+  <span class="title">Nouvelle Partie !</span>
+
+  <button type="button" class="btn btn-success" (click)="startGame()">ICI !</button>
 </div>
-<img src="assets/Bateau_Proffil.png" height="100">
 
-<span class="title">Nouvelle Partie !</span>
-<button type="button" class="btn btn-success">ICI !</button>
+<!-- Les grilles apparaissent uniquement si la partie a commencé -->
+<div class="battleship-container" *ngIf="gameStarted">
+  <!-- Grille pour le Joueur 1 -->
+  <div class="battleship-board" [ngClass]="{ 'disabled': isPlacing && currentPlayer === 2, 'overlay': overlayOnPlayer1 }">
+    <div class="row" *ngFor="let i of [].constructor(10); let rowIndex = index">
+      <button class="cell" *ngFor="let j of [].constructor(10); let cellIndex = index" (click)="handleClick(rowIndex, cellIndex)"></button>
+    </div>
+  </div>
 
-<div class="battleship-board">
-  <div class="row" *ngFor="let row of [].constructor(10); let i = index">
-    <button class="cell" *ngFor="let cell of [].constructor(10); let j = index" (click)="handleClick(i, j)"></button>
+  <!-- Conteneur pour le bouton de validation -->
+  <div class="validate-container">
+    <button type="button" class="btn btn-primary" (click)="validatePlacement()">Valider Placement</button>
+  </div>
+
+  <!-- Grille pour le Joueur 2 -->
+  <div class="battleship-board" [ngClass]="{ 'disabled': isPlacing && currentPlayer === 1, 'overlay': overlayOnPlayer2 }">
+    <div class="row" *ngFor="let i of [].constructor(10); let rowIndex = index">
+      <button class="cell" *ngFor="let j of [].constructor(10); let cellIndex = index" (click)="handleClick(rowIndex, cellIndex)"></button>
+    </div>
   </div>
 </div>

@@ -5,65 +5,133 @@
   margin: 25px;
   flex-direction: column;
 
+  .welcome-container {
+    display: flex;
+    flex-direction: column; /* Organise les éléments verticalement */
+    align-items: center; /* Centre les éléments horizontalement */
+    text-align: center; /* Centre le texte */
+    margin-bottom: 20px; /* Espacement sous le conteneur de bienvenue */
+  }
+
   .title {
     font-family: Caveat, sans-serif;
     font-size: 4.5em;
     font-weight: 700;
-    margin: 30px 0;
+    margin: 30px 0; /* Espacement autour du titre */
   }
 
   .welcome {
-    text-align: center;
-    margin-top: 30px;
-    margin-bottom: 30px;
+    margin: 20px 0; /* Espacement autour du texte de bienvenue */
     font-size: x-large;
   }
 
-  .card {
-    margin-top: 50px;
-    margin-left: 50px;
-    border: none;
-    display: flex;
-    align-items: center;
-
-    img {
-      height: 64%;
-      width: 68%;
-      margin-left: 20px;
-    }
-
-    .card-text {
-      font-family: "Dancing Script", sans-serif;
-      font-size: x-large;
-      margin-top: 0;
-      line-height: 1.7;
-      max-width: 400px;
-      margin-left: 15px;
-    }
+  .btn {
+    margin: 20px 0; /* Espacement autour du bouton */
   }
+
+  .battleship-container {
+    display: flex; /* Aligner les grilles horizontalement */
+    justify-content: space-between; /* Espace entre les grilles */
+    margin-top: 20px;
+    width: 100%; /* Prendre toute la largeur disponible */
+    max-width: 900px; /* Largeur maximum pour éviter trop d'étirement */
+  }
+
   .battleship-board {
+    position: relative; /* Nécessaire pour l'overlay absolu */
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 20px;
+    width: 100%; /* Prendre toute la largeur disponible */
+    max-width: 350px;
+    border: 1px solid #ccc;
+    background-color: white;
+  }
+
+  .battleship-board .row {
+    display: flex;
+    flex-wrap: nowrap;
+  }
+
+  .battleship-board.disabled {
+    pointer-events: none; /* Désactive les événements de clic sur la grille */
+  }
+
+  .battleship-board.disabled::after {
+    content: ""; /* Nécessaire pour afficher un pseudo-élément */
+    position: absolute; /* Positionnement absolu par rapport à .battleship-board */
+    top: 0; /* Aligner en haut */
+    left: 0; /* Aligner à gauche */
+    width: 100%; /* Prendre toute la largeur de la grille */
+    height: 100%; /* Prendre toute la hauteur de la grille */
+    background-color: rgba(211, 211, 211, 0.7); /* Couleur grise semi-transparente */
+    z-index: 1; /* Assure que l'overlay est au-dessus des cellules */
+  }
+
+  .battleship-board.overlay::after {
+    content: ""; /* Nécessaire pour afficher un pseudo-élément */
+    position: absolute; /* Positionnement absolu par rapport à .battleship-board */
+    top: 0; /* Aligner en haut */
+    left: 0; /* Aligner à gauche */
+    width: 100%; /* Prendre toute la largeur de la grille */
+    height: 100%; /* Prendre toute la hauteur de la grille */
+    background-color: rgba(211, 211, 211, 0.7); /* Couleur grise semi-transparente */
+    z-index: 1; /* Assure que l'overlay est au-dessus des cellules */
+    pointer-events: none; /* Désactive les clics sur l'overlay */
   }
 
   .row {
-    display: flex;
+    display: flex; /* Les cellules de la grille s'affichent en ligne */
+    flex-wrap: nowrap; /* Empêche les lignes de se plier */
   }
 
   .cell {
-    width: 40px; /* Largeur de chaque case */
-    height: 40px; /* Hauteur de chaque case */
-    background-color: grey; /* Couleur de fond */
-    border: 1px solid #ccc; /* Bordure */
-    margin: 1px; /* Espacement entre les boutons */
-    cursor: pointer; /* Curseur en main au survol */
-    transition: background-color 0.3s; /* Transition pour l'effet au survol */
+    width: 40px; /* Taille carrée des cellules */
+    height: 40px;
+    background-color: grey;
+    border: 1px solid #ccc;
+    margin: 0;
+    cursor: pointer;
   }
 
   .cell:hover {
     background-color: darkgrey; /* Couleur au survol */
   }
 
+  .disabled {
+    background-color: lightgray; /* Couleur de fond grisée */
+    pointer-events: none; /* Désactive les événements de clic */
+  }
+
+  .disabled .cell {
+    background-color: lightgray; /* Griser les cellules lorsqu'elles sont désactivées */
+  }
+
+  .validate-container {
+    display: flex; /* Utiliser flex pour centrer le bouton */
+    align-items: center; /* Centrer verticalement */
+    justify-content: center; /* Centrer horizontalement */
+    margin: 0 100px; /* Ajustez pour espacer les grilles du bouton */
+  }
+
+  /* Styles du bouton de validation */
+  .btn-primary {
+    background-color: #007bff; /* Couleur de fond du bouton */
+    color: white; /* Couleur du texte */
+    border: none; /* Pas de bordure */
+    padding: 10px 20px; /* Espacement interne */
+    font-size: 1.2em; /* Taille de la police */
+    border-radius: 5px; /* Coins arrondis */
+    cursor: pointer; /* Curseur en main au survol */
+    transition: background-color 0.3s, transform 0.3s; /* Transition pour l'effet au survol */
+  }
+
+  .btn-primary:hover {
+    background-color: #0056b3; /* Couleur au survol */
+    transform: scale(1.05); /* Légère augmentation de la taille au survol */
+  }
+
+  .btn-primary:focus {
+    outline: none; /* Retirer le contour lors du focus */
+  }
 }
