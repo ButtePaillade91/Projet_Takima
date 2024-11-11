@@ -4,10 +4,14 @@ import com.takima.backskeleton.models.Bateau;
 import com.takima.backskeleton.models.Carte;
 import com.takima.backskeleton.models.Joueur;
 import org.springframework.stereotype.Service;
+import lombok.Setter;
+import lombok.Getter;
 
 import java.util.Random;
 import java.util.Scanner;
 
+@Setter
+@Getter
 @Service
 public class GameService {
 
@@ -162,21 +166,5 @@ public class GameService {
                 carte.grille[x][y + i].bateauOccupe = bateau;
             }
         }
-    }
-
-    public void setJoueur(Joueur joueur) {
-        this.joueur = joueur;
-    }
-
-    public void setOrdinateur(Joueur ordinateur) {
-        this.ordinateur = ordinateur;
-    }
-
-    public void setCarteJoueur(Carte carteJoueur) {
-        this.carteJoueur = carteJoueur;
-    }
-
-    public void setCarteOrdinateur(Carte carteOrdinateur) {
-        this.carteOrdinateur = carteOrdinateur;
     }
 }

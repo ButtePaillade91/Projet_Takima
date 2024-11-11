@@ -32,7 +32,7 @@ public class Carte {
         this.grille = new Cellule[10][10];
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
-                grille[i][j] = new Cellule(0, i, j, null); // Initialisation sans bateau
+                grille[i][j] = new Cellule(0, null); // Initialisation sans bateau
             }
         }
     }
