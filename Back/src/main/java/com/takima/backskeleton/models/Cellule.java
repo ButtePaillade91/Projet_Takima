@@ -1,9 +1,14 @@
 package com.takima.backskeleton.models;
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
 public class Cellule {
     int id;
     int position_x;
     int position_y;
-    Bateau bateauOccupe;
+    public Bateau bateauOccupe;
 
     public Cellule(int id, int position_x, int position_y, Bateau bateauOccupe) {
         this.id = id;

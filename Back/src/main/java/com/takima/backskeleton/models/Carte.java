@@ -1,7 +1,11 @@
 package com.takima.backskeleton.models;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "carte")
 public class Carte {
@@ -11,17 +15,29 @@ public class Carte {
 
     String nom_carte;
 
-    Cellule[] grille;
+    @Transient
+    public Cellule[][] grille;
 
-    public Carte(int id, String nom_carte, Cellule[] grille) {
+    public Carte(int id, String nom_carte) {
         this.id = id;
         this.nom_carte = nom_carte;
-        this.grille = grille;
+        initializeGrille();
     }
 
     public Carte() {}
 
-    public void Toucher(Cellule[] grille, int i) {
-        grille[i].bateauOccupe=null;
+    private void initializeGrille() {
+        this.grille = new Cellule[10][10];
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                grille[i][j] = new Cellule(0, i, j, null); // Initialisation sans bateau
+            }
+        }
     }
+
+    public void Toucher(Cellule[][] grille, int i, int b) {
+        grille[i][b].bateauOccupe=null;
+    }
+
+
 }

@@ -2,7 +2,9 @@ package com.takima.backskeleton.models;
 
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
+@Getter
 @Entity
 @Table(name = "bateau")
 public class Bateau {
@@ -26,6 +28,4 @@ public class Bateau {
         this.vie = vie;
         this.type_bateau = type_bateau;
     }
-
-
 }
