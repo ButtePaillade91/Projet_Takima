@@ -20,6 +20,7 @@ public class GameService {
     private Carte carteJoueur;
     private Carte carteOrdinateur;
 
+
     public GameService(Joueur joueur, Joueur ordinateur, Carte carteJoueur, Carte carteOrdinateur) {
         this.joueur = joueur;
         this.ordinateur = ordinateur;
