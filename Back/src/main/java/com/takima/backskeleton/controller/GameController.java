@@ -32,34 +32,10 @@ public class GameController {
         game.setCarteOrdinateur(carteOrdinateur);
 
         // Placer les bateaux aléatoirement
-        game.shipPlacement();
+        game.shipPlacement(carteOrdinateur, ordinateur, carteJoueur, joueur);
 
         return "Jeu démarré avec succès !";
     }
 
-    // Action de tir du joueur
-    @PostMapping("/player-turn")
-    public String playerTurn(@RequestParam int x, @RequestParam int y, @RequestParam int munitionType) {
-        // Appeler la méthode playerTurn de la logique du jeu
-        boolean victory = game.playerTurn(); // Appel à la méthode playerTurn
 
-        if (victory) {
-            return "Vous avez gagné !";
-        }
-
-        return "C'est à l'ordinateur de jouer.";
-    }
-
-    // Action de tir de l'ordinateur
-    @GetMapping("/computer-turn")
-    public String computerTurn() {
-        // Appeler la méthode computerTurn de la logique du jeu
-        boolean victory = game.computerTurn(); // Appel à la méthode computerTurn
-
-        if (victory) {
-            return "L'ordinateur a gagné !";
-        }
-
-        return "C'est à votre tour de jouer.";
-    }
 }
