@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { GameService, Joueur, Carte, Projectile } from '../services/game.service';
 
 @Component({
   selector: 'app-home',
@@ -6,35 +7,59 @@ import { Component } from '@angular/core';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent {
-  // Propriété pour gérer l'état de la fenêtre modale
-  isModalOpen = false;
+  // Propriétés pour stocker les coordonnées de la cellule cliquée
+  lastClicked: { x: number; y: number } | null = null;
 
-  // Propriété pour capturer le pseudo du joueur
+  // Joueur et munitions
+  joueur: Joueur = { pseudo: 'Joueur1' };
+  munitions: Projectile[] = [{ type: 'missile', quantite: 5 }];
+  carte: Carte = { grille: [] };
+
+  // Variable pour contrôler l'affichage des pseudos
+  showNames: boolean = false;
+
+  // Propriétés pour la modale
+  isModalOpen = false;
   pseudo: string = '';
 
-  // Méthode basique pour gérer les clics sur une cellule
+  constructor(private gameService: GameService) {}
+
+  // Méthode basique pour gérer les clics sur une cellule et effectuer un tir
   handleClick(i: number, j: number): void {
     console.log(`Cellule cliquée : Ligne ${i}, Colonne ${j}`);
+    this.lastClicked = { x: i, y: j };
+
+    // Appeler la fonction tirer() du service GameService
+    const munitionType = 0; // Par exemple, le premier type de munition
+    this.gameService
+      .tirer(this.joueur.id || 1, i, j, this.carte, this.munitions, munitionType)
+      .subscribe({
+        next: (result: any) => {
+          console.log('Tir effectué avec succès:', result);
+        },
+        error: (err: any) => {
+          console.error('Erreur lors du tir:', err);
+        },
+      });
   }
 
-  // Méthode pour ouvrir la modale
+  // Ouvrir la modale pour entrer un pseudo
   openModal(): void {
     this.isModalOpen = true;
   }
 
-  // Méthode pour fermer la modale
+  // Fermer la modale
   closeModal(): void {
     this.isModalOpen = false;
   }
 
-  // Méthode pour démarrer le jeu et envoyer le pseudo
+  // Commencer la partie, afficher les pseudos et fermer la modale
   startGame(): void {
     if (this.pseudo) {
-      console.log('Pseudo du joueur:', this.pseudo);
-      // Vous pouvez envoyer ce pseudo au backend ici via un service HTTP
-      // Exemple : this.gameService.startGame(this.pseudo);
-
-      this.closeModal(); // Fermer la modale après avoir démarré le jeu
+      this.joueur.pseudo = this.pseudo;
+      this.showNames = true; // Affiche les pseudos une fois le jeu lancé
+      console.log('Pseudo du joueur:', this.joueur.pseudo);
+      this.closeModal();
     } else {
       alert('Veuillez entrer un pseudo.');
     }
