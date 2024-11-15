@@ -6,8 +6,6 @@ import { Observable } from 'rxjs';
 export interface Joueur {
   id?: number;
   pseudo: string;
-  munitions?: Projectile[];
-  bateaux?: Bateau[];
 }
 
 export interface Carte {
@@ -17,15 +15,14 @@ export interface Carte {
 
 export interface Bateau {
   id?: number;
-  type: string;
-  longueur: number;
+  type_bateau: string;
+  taille: number;
   vie: number;
 }
 
 export interface Projectile {
   id?: number;
   type: string;
-  quantite: number;
 }
 
 export interface Cellule {
@@ -38,7 +35,7 @@ export interface Cellule {
   providedIn: 'root',
 })
 export class GameService {
-  private baseUrl = 'http://localhost:5432'; // Update with your backend URL
+  private baseUrl = 'http://localhost:8080/api'; // Update with your backend URL
 
   constructor(private http: HttpClient) {}
 
@@ -54,13 +51,13 @@ export class GameService {
   playerTurn(
     positionX: number,
     positionY: number,
-    munitionType: number
+
   ): Observable<string> {
     const url = `${this.baseUrl}/game/player-turn`;
     const params = {
       positionX: positionX.toString(),
       positionY: positionY.toString(),
-      munitionType: munitionType.toString(),
+
     };
     return this.http.post<string>(url, {}, { params });
   }
@@ -80,22 +77,22 @@ export class GameService {
   /** JoueurController Methods */
 
   getAllJoueurs(): Observable<Joueur[]> {
-    const url = `${this.baseUrl}/joueurs`;
+    const url = `${this.baseUrl}/joueur/all`;
     return this.http.get<Joueur[]>(url);
   }
 
   getJoueurById(id: number): Observable<Joueur> {
-    const url = `${this.baseUrl}/joueurs/${id}`;
+    const url = `${this.baseUrl}/joueur/${id}`;
     return this.http.get<Joueur>(url);
   }
 
   createJoueur(joueur: Joueur): Observable<Joueur> {
-    const url = `${this.baseUrl}/joueurs`;
+    const url = `${this.baseUrl}/joueur/create`;
     return this.http.post<Joueur>(url, joueur);
   }
 
   deleteJoueur(id: number): Observable<void> {
-    const url = `${this.baseUrl}/joueurs/${id}`;
+    const url = `${this.baseUrl}/joueur/delete/${id}`;
     return this.http.delete<void>(url);
   }
 
@@ -103,23 +100,21 @@ export class GameService {
     id: number,
     positionX: number,
     positionY: number,
-    carte: Carte,
-    munitions: Projectile[],
-    munitionUtilisee: number
+    carte: Carte
   ): Observable<number> {
-    const url = `${this.baseUrl}/joueurs/${id}/tirer`;
+    const url = `${this.baseUrl}/joueur/${id}/tirer`;
     const params = {
       positionX: positionX.toString(),
       positionY: positionY.toString(),
-      munitionUtilisee: munitionUtilisee.toString(),
+
     };
-    return this.http.post<number>(url, { carte, munitions }, { params });
+    return this.http.post<number>(url, { carte}, { params });
   }
 
   /** BateauController Methods */
 
   getAllBateaux(): Observable<Bateau[]> {
-    const url = `${this.baseUrl}/bateaux`;
+    const url = `${this.baseUrl}/bateaux/all`;
     return this.http.get<Bateau[]>(url);
   }
 
@@ -129,34 +124,56 @@ export class GameService {
   }
 
   createBateau(bateau: Bateau): Observable<Bateau> {
-    const url = `${this.baseUrl}/bateaux`;
+    const url = `${this.baseUrl}/bateaux/create`;
     return this.http.post<Bateau>(url, bateau);
   }
 
   deleteBateau(id: number): Observable<void> {
-    const url = `${this.baseUrl}/bateaux/${id}`;
+    const url = `${this.baseUrl}/bateaux/delete/${id}`;
     return this.http.delete<void>(url);
   }
 
   /** CarteController Methods */
 
   getAllCartes(): Observable<Carte[]> {
-    const url = `${this.baseUrl}/cartes`;
+    const url = `${this.baseUrl}/carte/all`;
     return this.http.get<Carte[]>(url);
   }
 
   getCarteById(id: number): Observable<Carte> {
-    const url = `${this.baseUrl}/cartes/${id}`;
+    const url = `${this.baseUrl}/carte/${id}`;
     return this.http.get<Carte>(url);
   }
 
   createCarte(carte: Carte): Observable<Carte> {
-    const url = `${this.baseUrl}/cartes`;
+    const url = `${this.baseUrl}/carte/carte`;
     return this.http.post<Carte>(url, carte);
   }
 
   deleteCarte(id: number): Observable<void> {
-    const url = `${this.baseUrl}/cartes/${id}`;
+    const url = `${this.baseUrl}/carte/delete/${id}`;
+    return this.http.delete<void>(url);
+  }
+
+  /** ProjectileController Methods */
+
+  getAllProjectiles(): Observable<Projectile[]> {
+    const url = `${this.baseUrl}/projectile/all`;
+    return this.http.get<Projectile[]>(url);
+  }
+
+  getProjectileById(id: number): Observable<Projectile> {
+    const url = `${this.baseUrl}/projectile/${id}`;
+    return this.http.get<Projectile>(url);
+  }
+
+  createProjectile(projectile: Projectile): Observable<Projectile> {
+    const url = `${this.baseUrl}/projectile/create`;
+    return this.http.post<Projectile>(url, projectile);
+  }
+
+  deleteProjectile(id: number): Observable<void> {
+    const url = `${this.baseUrl}/projectile/delete/${id}`;
     return this.http.delete<void>(url);
   }
 }
