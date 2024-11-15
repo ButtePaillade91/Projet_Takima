@@ -1,7 +1,9 @@
 
 package com.takima.backskeleton.controller;
 
+import com.takima.backskeleton.models.Carte;
 import com.takima.backskeleton.models.Joueur;
+import com.takima.backskeleton.models.Projectile;
 import com.takima.backskeleton.services.joueurService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -35,5 +37,19 @@ public class joueurController {
     public void deleteJoueur(@PathVariable int id) {
         joueurService.deleteJoueur(id);
     }
+
+    @PostMapping("/{id}/tirer")
+    public ResponseEntity<Integer> tirer(
+            @PathVariable int id,
+            @RequestParam int positionX,
+            @RequestParam int positionY,
+            @RequestBody Carte carte,
+            @RequestBody List<Projectile> munitions,
+            @RequestParam int munitionUtilisee) {
+
+        int result = joueurService.tirer(id, positionX, positionY, carte, munitions, munitionUtilisee);
+        return ResponseEntity.ok(result);
+    }
+
 }
 

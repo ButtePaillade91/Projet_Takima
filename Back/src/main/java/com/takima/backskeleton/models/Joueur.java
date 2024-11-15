@@ -47,7 +47,7 @@ public class Joueur {
 
 
     public int tirer(int position_x, int position_y, Carte map, List<Projectile> munitions, int munitionUtilisee) {
-        int resultat = 0;
+        int resultat = 0; //dans l'eau
 
         // Vérifie les limites de la grille pour éviter une sortie de tableau
         if (position_x < 0 || position_x >= 10 || position_y < 0 || position_y >= 10) {
