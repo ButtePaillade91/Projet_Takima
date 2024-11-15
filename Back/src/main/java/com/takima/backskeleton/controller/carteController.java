@@ -8,29 +8,29 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/cartes")
+@RequestMapping("/api")
 public class carteController {
 
     @Autowired
     private carteService carteService;
 
-    @GetMapping
+    @GetMapping("/carte/all")
     public List<Carte> getAllCartes() {
         return carteService.getAllCartes();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/carte/{id}")
     public ResponseEntity<Carte> getCarteById(@PathVariable int id) {
         Carte carte = carteService.getCarteById(id);
         return carte != null ? ResponseEntity.ok(carte) : ResponseEntity.notFound().build();
     }
 
-    @PostMapping
+    @PostMapping("/carte/create")
     public Carte createCarte(@RequestBody Carte carte) {
         return carteService.createCarte(carte);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/carte/delete/{id}")
     public void deleteCarte(@PathVariable int id) {
         carteService.deleteCarte(id);
     }

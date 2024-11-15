@@ -5,7 +5,7 @@ import lombok.Setter;
 @Setter
 @Getter
 public class Cellule {
-    int id;
+    private int id;
     public Bateau bateauOccupe;
 
     public Cellule(int id, Bateau bateauOccupe) {

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/game")
+@RequestMapping("/api")
 public class GameController {
 
     private final GameService game; // Service for game logic
@@ -21,12 +21,12 @@ public class GameController {
     }
 
     // Start a new game
-    @PostMapping("/start")
-    public ResponseEntity<Map<String, String>> startGame(@RequestBody Joueur joueur) {
+    @PostMapping("/game/start")
+    public ResponseEntity<Map<String, String>> startGame(@RequestBody Joueur joueur, Carte carte) {
         // Create opponent and boards
         Joueur ordinateur = new Joueur();
-        Carte carteJoueur = new Carte();
-        Carte carteOrdinateur = new Carte();
+        Carte carteJoueur = carte;
+        Carte carteOrdinateur = carte;
 
         // Initialize the game
         game.setJoueur(joueur);
@@ -42,7 +42,7 @@ public class GameController {
     }
 
     // Player's turn
-    @PostMapping("/player-turn")
+    @PostMapping("/game/player-turn")
     public ResponseEntity<Map<String, Object>> playerTurn(
             @RequestParam int x,
             @RequestParam int y,
@@ -55,7 +55,7 @@ public class GameController {
     }
 
     // Computer's turn
-    @GetMapping("/computer-turn")
+    @GetMapping("/game/computer-turn")
     public ResponseEntity<Map<String, Object>> computerTurn() {
         boolean result = game.computerTurn(game.getOrdinateur(), game.getCarteJoueur());
         return ResponseEntity.ok(Map.of(
@@ -65,7 +65,7 @@ public class GameController {
     }
 
     // Check victory status
-    @GetMapping("/check-victory")
+    @GetMapping("/game/check-victory")
     public ResponseEntity<Map<String, Boolean>> checkVictory(@RequestParam String target) {
         boolean victory;
         if ("player".equalsIgnoreCase(target)) {

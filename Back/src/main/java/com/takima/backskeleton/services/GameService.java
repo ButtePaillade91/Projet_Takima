@@ -57,11 +57,8 @@ public class GameService {
         System.out.print("Coordonnée y: ");
         int y = scanner.nextInt();
 
-        System.out.print("Type de munition: ");
-        int munitionType = scanner.nextInt();
-
         // Appel de la méthode tir avec les entrées de l'utilisateur
-        int result = joueur.tirer(x, y, carteOrdinateur, joueur.getMunitions(), munitionType);
+        int result = joueur.tirer(x, y, carteOrdinateur);
         displayShotResult(result);
 
         return checkVictory(carteOrdinateur); // Vérifie si l'ordinateur a perdu
@@ -73,9 +70,8 @@ public class GameService {
         // Logique pour déterminer les coordonnées du tir de l'ordinateur
         int x = new Random().nextInt(10); // Coordonnée aléatoire entre 0 et 9
         int y = new Random().nextInt(10); // Coordonnée aléatoire entre 0 et 9
-        int munitionType = 1; // Exemple de type de munition
 
-        int result = ordinateur.tirer(x, y, carteJoueur, ordinateur.getMunitions(), munitionType);
+        int result = ordinateur.tirer(x, y, carteJoueur);
         displayShotResult(result);
 
         return checkVictory(carteJoueur); // Vérifie si le joueur a perdu
@@ -125,7 +121,7 @@ public class GameService {
             bateauOrdinateur.setTaille(taillesBateaux[i]);
             bateauOrdinateur.setVie(taillesBateaux[i]);
             bateauOrdinateur.setType_bateau("Bateau" + (i + 1));
-            bateauOrdinateur.setJoueur(ordinateur);
+
 
             boolean bateauOrdinateurPlace = false;
             while (!bateauOrdinateurPlace) {
@@ -144,7 +140,7 @@ public class GameService {
             bateauJoueur.setTaille(taillesBateaux[i]);
             bateauJoueur.setVie(taillesBateaux[i]);
             bateauJoueur.setType_bateau("Bateau" + (i + 1));
-            bateauJoueur.setJoueur(joueur);
+
 
             boolean bateauJoueurPlace = false;
             while (!bateauJoueurPlace) {

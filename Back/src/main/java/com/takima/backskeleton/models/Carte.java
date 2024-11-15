@@ -13,15 +13,15 @@ import org.springframework.stereotype.Service;
 public class Carte {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
+    private int id_carte;
 
-    String nom_carte;
+    private String nom_carte;
 
     @Transient
     public Cellule[][] grille;
 
-    public Carte(int id, String nom_carte) {
-        this.id = id;
+    public Carte(int id_carte, String nom_carte) {
+        this.id_carte = id_carte;
         this.nom_carte = nom_carte;
         initializeGrille();
     }

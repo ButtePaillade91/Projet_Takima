@@ -12,20 +12,14 @@ import lombok.Setter;
 public class Bateau {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
-    int taille;
-
-    @ManyToOne
-    @JoinColumn(name = "id_joueur", nullable = false)
-    private Joueur joueur;
-
-    int orientation;
-    int vie;
-    String type_bateau;
+    private int id_bateau;
+    private int taille;
+    private int vie;
+    private String type_bateau;
 
     public Bateau() {}
-    public Bateau(int id, int taille, int vie, String type_bateau) {
-        this.id = id;
+    public Bateau(int id_bateau, int taille, int vie, String type_bateau) {
+        this.id_bateau = id_bateau;
         this.taille = taille;
         this.vie = vie;
         this.type_bateau = type_bateau;

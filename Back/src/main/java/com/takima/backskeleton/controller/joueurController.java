@@ -11,43 +11,41 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/joueurs")
+@RequestMapping("/api")
 public class joueurController {
 
     @Autowired
     private joueurService joueurService;
 
-    @GetMapping
+    @GetMapping("joueur/all")
     public List<Joueur> getAllJoueurs() {
         return joueurService.getAllJoueurs();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/joueur/{id}")
     public ResponseEntity<Joueur> getJoueurById(@PathVariable int id) {
         Joueur joueur = joueurService.getJoueurById(id);
         return joueur != null ? ResponseEntity.ok(joueur) : ResponseEntity.notFound().build();
     }
 
-    @PostMapping
+    @PostMapping("/joueur/create")
     public Joueur createJoueur(@RequestBody Joueur joueur) {
         return joueurService.createJoueur(joueur);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/joueur/delete/{id}")
     public void deleteJoueur(@PathVariable int id) {
         joueurService.deleteJoueur(id);
     }
 
-    @PostMapping("/{id}/tirer")
+    @PostMapping("/joueur/{id}/tirer")
     public ResponseEntity<Integer> tirer(
             @PathVariable int id,
             @RequestParam int positionX,
             @RequestParam int positionY,
-            @RequestBody Carte carte,
-            @RequestBody List<Projectile> munitions,
-            @RequestParam int munitionUtilisee) {
+            @RequestBody Carte carte) {
 
-        int result = joueurService.tirer(id, positionX, positionY, carte, munitions, munitionUtilisee);
+        int result = joueurService.tirer(id, positionX, positionY, carte);
         return ResponseEntity.ok(result);
     }
 

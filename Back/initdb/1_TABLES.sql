@@ -11,18 +11,19 @@ CREATE TABLE IF NOT EXISTS public.joueur (
 );
 
 CREATE TABLE IF NOT EXISTS public.bateau (
-                                             id_bateau     SERIAL PRIMARY KEY,
+                                             id_bateau    SERIAL PRIMARY KEY,
                                              type_bateau   TEXT NOT NULL,
+                                             vie            INT NOT NULL,
                                              taille        INT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.carte (
-                                            id          SERIAL PRIMARY KEY,
+                                            id_carte          SERIAL PRIMARY KEY,
                                             nom_carte   TEXT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS public.projectile (
-                                                 id_projectile     SERIAL PRIMARY KEY,
+                                                 id_projectile    SERIAL PRIMARY KEY,
                                                  type_projectile   TEXT NOT NULL
 );
 
