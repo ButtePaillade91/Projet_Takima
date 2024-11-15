@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-// Define your models/interfaces (can be expanded as needed)
+// Define your models/interfaces
 export interface Joueur {
   id?: number;
   pseudo: string;
@@ -38,15 +38,43 @@ export interface Cellule {
   providedIn: 'root',
 })
 export class GameService {
-  private baseUrl = 'http://localhost:8080'; // Update with your backend URL
+  private baseUrl = 'http://localhost:5432'; // Update with your backend URL
 
   constructor(private http: HttpClient) {}
 
   /** GameController Methods */
 
+  // Start a new game
   startGame(joueur: Joueur): Observable<string> {
     const url = `${this.baseUrl}/game/start`;
     return this.http.post<string>(url, joueur);
+  }
+
+  // Trigger a player's turn (custom endpoint)
+  playerTurn(
+    positionX: number,
+    positionY: number,
+    munitionType: number
+  ): Observable<string> {
+    const url = `${this.baseUrl}/game/player-turn`;
+    const params = {
+      positionX: positionX.toString(),
+      positionY: positionY.toString(),
+      munitionType: munitionType.toString(),
+    };
+    return this.http.post<string>(url, {}, { params });
+  }
+
+  // Trigger a computer's turn (custom endpoint)
+  computerTurn(): Observable<string> {
+    const url = `${this.baseUrl}/game/computer-turn`;
+    return this.http.post<string>(url, {});
+  }
+
+  // Get the current state of the game
+  getGameState(): Observable<{ joueur: Joueur; ordinateur: Joueur; cartes: Carte[] }> {
+    const url = `${this.baseUrl}/game/state`;
+    return this.http.get<{ joueur: Joueur; ordinateur: Joueur; cartes: Carte[] }>(url);
   }
 
   /** JoueurController Methods */

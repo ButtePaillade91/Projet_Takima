@@ -101,7 +101,7 @@ public class GameService {
         }
     }
 
-    private boolean checkVictory(Carte carte) {
+    public boolean checkVictory(Carte carte) {
         // Vérifie si tous les bateaux ont été coulés
         for (int i = 0; i < carte.grille.length; i++) {
             for (int j = 0; j < carte.grille[i].length; j++) {
