@@ -1,9 +1,7 @@
-# Your backend API
+# Lancement du projet
 
-## Set up 
-1. Copie-colle le .env.sample en .env
-2. Fait un `docker-compose up`
-2. Rajoute le pluggin : https://plugins.jetbrains.com/plugin/7861-envfile
-3. <img src="img-readme/img.png">
-3. <img src="img-readme/img_1.png">
-3. <img src="img-readme/img_2.png">
+Pour lancer le Back, lancer BackSkeletonApplication.
+
+Pour le Front, naviguer jusqu'à /Front et exécuter ng serve
+
+Enfin, pour la BDD, naviguer jusqu'à /Back et exécuter docker-compose up
