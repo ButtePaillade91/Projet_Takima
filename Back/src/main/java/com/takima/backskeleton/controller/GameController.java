@@ -33,28 +33,18 @@ public class GameController {
 
     // Computer's turn
     @GetMapping("/game/computer-turn")
-    public ResponseEntity<Map<String, Object>> computerTurn(
+    public ResponseEntity<String> computerTurn(
             @RequestBody Carte carte
     ) {
-        boolean result = game.computerTurn( carte);
-        return ResponseEntity.ok(Map.of(
-                "message", result ? "L'ordinateur a gagné !" : "Tour terminé.",
-                "victory", result
-        ));
+        game.computerTurn( carte);
+        return ResponseEntity.ok("tour terminé");
     }
 
     // Check victory status
     @GetMapping("/game/check-victory")
-    public ResponseEntity<Map<String, Boolean>> checkVictory(@RequestParam String target) {
-        boolean victory;
-        if ("player".equalsIgnoreCase(target)) {
-            victory = game.checkVictory(game.getCarteOrdinateur());
-        } else if ("computer".equalsIgnoreCase(target)) {
-            victory = game.checkVictory(game.getCarteJoueur());
-        } else {
-            return ResponseEntity.badRequest().body(Map.of("error", true));
-        }
-        return ResponseEntity.ok(Map.of("victory", victory));
+    public ResponseEntity<String> checkVictory(@RequestBody Carte carte) {
+        game.checkVictory(carte);
+        return ResponseEntity.ok("victory");
     }
 
     @PostMapping("/game/tirer")

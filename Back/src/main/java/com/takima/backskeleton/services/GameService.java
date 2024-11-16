@@ -10,7 +10,6 @@ import lombok.Getter;
 
 import java.util.List;
 import java.util.Random;
-import java.util.Scanner;
 
 @Setter
 @Getter
@@ -31,7 +30,7 @@ public class GameService {
     }
 
 
-    public boolean computerTurn(Carte carteJoueur) {
+    public void computerTurn(Carte carteJoueur) {
         System.out.println("Tour de l'ordinateur...");
 
         // Logique pour déterminer les coordonnées du tir de l'ordinateur
@@ -39,38 +38,18 @@ public class GameService {
         int y = new Random().nextInt(10); // Coordonnée aléatoire entre 0 et 9
 
         int result = tirer(x, y, carteJoueur);
-        displayShotResult(result);
-
-        return checkVictory(carteJoueur); // Vérifie si le joueur a perdu
     }
 
-    private void displayShotResult(int result) {
-        switch (result) {
-            case 0:
-                System.out.println("Dans l'eau.");
-                break;
-            case 1:
-                System.out.println("Touché !");
-                break;
-            case 2:
-                System.out.println("Coulé !");
-                break;
-            default:
-                System.out.println("Résultat inconnu.");
-                break;
-        }
-    }
 
-    public boolean checkVictory(Carte carte) {
+    public void checkVictory(Carte carte) {
         // Vérifie si tous les bateaux ont été coulés
         for (int i = 0; i < carte.grille.length; i++) {
             for (int j = 0; j < carte.grille[i].length; j++) {
                 if (carte.grille[i][j].bateauOccupe != null) {
-                    return false; // Il reste des bateaux, donc pas de victoire
+                    return; // Il reste des bateaux, donc pas de victoire
                 }
             }
         }
-        return true; // Tous les bateaux sont coulés, victoire
     }
 
     public void shipPlacement(Carte carte, List<Bateau> bateau) {
@@ -129,7 +108,7 @@ public class GameService {
     }
 
     public int tirer(int position_x, int position_y, Carte map) {
-        int resultat = 0; //dans l'eau
+        int resultat = 3; //dans l'eau
 
         Cellule cellule = map.getGrille()[position_x][position_y];
 

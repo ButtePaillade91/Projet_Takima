@@ -124,53 +124,165 @@ export class HomeComponent implements OnInit{
     this.isModalOpen = false;
   }
 
-  startGame(): void {
-    for (let i = 0; i <= 4; i++) {
-      this.fetchBateau(i);
+  async playGame(): Promise<void> {
+    let gameEnded = false;
+
+    console.log('Le jeu commence !');
+
+    while (!gameEnded) {
+      // Player's turn
+      await this.waitForPlayerTurn();
+
+      gameEnded = await this.checkVictory(this.carte);
+      if (gameEnded) {
+        console.log('Game Over! Player wins!');
+        break;
+      }
+
+      // Computer's turn
+      await this.computerTurn(this.carteAdversaire);
+
+      gameEnded = await this.checkVictory(this.carteAdversaire);
+      if (gameEnded) {
+        console.log('Game Over! Computer wins!');
+        break;
+      }
     }
+  }
+
+
+  async waitForPlayerTurn(): Promise<void> {
+    // Wait for a player action (e.g., clicking a cell on the game board)
+    return new Promise((resolve) => {
+      // Add an event listener or hook into your UI logic
+      const clickListener = (event: any) => {
+        const i = event.detail.row; // Example: Row index from event details
+        const j = event.detail.column; // Example: Column index from event details
+
+        // Ensure the event calls handleClick and resolves only when a real move happens
+        this.handleClick(i, j)
+          .then(() => {
+            document.removeEventListener('playerClick', clickListener); // Cleanup listener
+            resolve(); // Resolve after the player's turn is completed
+          })
+          .catch((error) => {
+            console.error('Error during player turn:', error);
+            document.removeEventListener('playerClick', clickListener); // Cleanup on error
+          });
+      };
+
+      // Listen for a custom event fired by your UI (e.g., a grid click)
+      document.addEventListener('playerClick', clickListener);
+    });
+  }
+
+
+  computerTurn(carte: Carte): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.gameService.computerTurn(carte).subscribe({
+        next: (result: any) => {
+          console.log('Computer turn completed:', result);
+          resolve();
+        },
+        error: (err: any) => {
+          console.error('Error during computer turn:', err);
+          reject(err);
+        },
+      });
+    });
+  }
+
+  checkVictory(carte: Carte): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      this.gameService.checkVictory(carte).subscribe({
+        next: (result: any) => {
+          console.log('Check effectué avec succès', result);
+          if (result === 'victory') {
+            resolve(true);
+          } else {
+            resolve(false);
+          }
+        },
+        error: (err: any) => {
+          console.error('Erreur lors du check de victoire:', err);
+          reject(err);
+        },
+      });
+    });
+  }
+
+
+
+  startGame(): void {
+    // Validate player selection
     if (!this.selectedJoueurId && !this.pseudo) {
       alert('Veuillez choisir un joueur ou entrer un pseudo.');
       return;
     }
 
-    // Manage the player
-    if (this.selectedJoueurId) {
-      this.joueur = this.joueurs.find(j => j.id === this.selectedJoueurId)!;
-    } else {
-      const newJoueur: Joueur = { pseudo: this.pseudo };
-      this.gameService.createJoueur(newJoueur).subscribe((data) => {
-        this.joueur = data;
-        this.loadJoueurs();
-      });
-    }
-
-    // Fetch the default Carte and start the game
-    this.gameService.getCarteById(1).subscribe(
-      (data) => {
-        this.carte = data;
-        this.carteAdversaire = JSON.parse(JSON.stringify(data)); // Clone for the opponent
-        this.showNames = true;
-        this.closeModal();
-      },
-      (error) => {
-        console.error('Erreur lors du chargement de la carte', error);
+    // Step 1: Manage the player
+    const playerPromise = new Promise<void>((resolve, reject) => {
+      if (this.selectedJoueurId) {
+        this.joueur = this.joueurs.find(j => j.id === this.selectedJoueurId)!;
+        resolve(); // Player already selected
+      } else {
+        const newJoueur: Joueur = { pseudo: this.pseudo };
+        this.gameService.createJoueur(newJoueur).subscribe(
+          (data) => {
+            this.joueur = data;
+            this.loadJoueurs();
+            resolve();
+          },
+          (error) => {
+            console.error('Erreur lors de la création du joueur', error);
+            reject(error);
+          }
+        );
       }
-    );
-    this.gameService.shipPlacement(this.carte, this.bateaux).subscribe(response => {
+    });
 
-        console.log('Bateaux placés avec succès:', response);
-    },
-      (error) => {
-        console.error('Erreur lors du chargement des bateaux', error);
-     });
-    this.gameService.shipPlacement(this.carteAdversaire, this.bateaux).subscribe(response => {
+    // Step 2: Fetch the carte and setup ships
+    const setupPromise = new Promise<void>((resolve, reject) => {
+      this.gameService.getCarteById(1).subscribe(
+        (data) => {
+          this.carte = data;
+          this.carteAdversaire = JSON.parse(JSON.stringify(data)); // Clone for the opponent
+          this.showNames = true;
+          this.closeModal();
 
-        console.log('Bateaux placés avec succès:', response);
-      },
-      (error) => {
-        console.error('Erreur lors du chargement des bateaux', error);
+          // Place ships for both players
+          const playerShipPlacement = this.gameService.shipPlacement(this.carte, this.bateaux).toPromise();
+          const adversaryShipPlacement = this.gameService.shipPlacement(this.carteAdversaire, this.bateaux).toPromise();
+
+          Promise.all([playerShipPlacement, adversaryShipPlacement])
+            .then(() => {
+              console.log('Bateaux placés avec succès');
+              resolve();
+            })
+            .catch((error) => {
+              console.error('Erreur lors du placement des bateaux', error);
+              reject(error);
+            });
+        },
+        (error) => {
+          console.error('Erreur lors du chargement de la carte', error);
+          reject(error);
+        }
+      );
+    });
+
+    // Step 3: Start the game after setup is complete
+    Promise.all([playerPromise, setupPromise])
+      .then(() => {
+        console.log('Démarrage du jeu...');
+        this.playGame().then(() => {
+          console.log('Le jeu est terminé.');
+        });
+      })
+      .catch((error) => {
+        console.error('Erreur lors de la configuration du jeu', error);
       });
-
   }
+
 
 }

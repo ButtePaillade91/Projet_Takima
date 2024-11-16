@@ -54,6 +54,11 @@ export class GameService {
     return this.http.post<string>(url, {carte});
   }
 
+  checkVictory(carte: Carte): Observable<string> {
+    const url = `${this.baseUrl}/game/check-victory`;
+    return this.http.post<string>(url, {carte});
+  }
+
   // Get the current state of the game
   getGameState(): Observable<{ joueur: Joueur; ordinateur: Joueur; cartes: Carte[] }> {
     const url = `${this.baseUrl}/game/state`;
