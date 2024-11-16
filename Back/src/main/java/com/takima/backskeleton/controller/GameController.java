@@ -5,6 +5,7 @@ import com.takima.backskeleton.models.Joueur;
 import com.takima.backskeleton.models.PoserBateau;
 import com.takima.backskeleton.services.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,20 +33,27 @@ public class GameController {
 
 
     // Computer's turn
-    @GetMapping("/game/computer-turn")
-    public ResponseEntity<String> computerTurn(
-            @RequestBody Carte carte
-    ) {
-        game.computerTurn( carte);
-        return ResponseEntity.ok("tour terminé");
+    @PostMapping("/game/computer-turn")
+    public ResponseEntity<String> computerTurn(@RequestBody Carte carte) {
+        try {
+            System.out.println("Réception de la carte pour le tour de l'ordinateur : " + carte);
+            game.computerTurn(carte);
+            return ResponseEntity.ok("Tour terminé");
+        } catch (Exception e) {
+            System.err.println("Erreur dans l'endpoint /game/computer-turn : " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors du tour de l'ordinateur");
+        }
     }
 
+
     // Check victory status
-    @GetMapping("/game/check-victory")
-    public ResponseEntity<String> checkVictory(@RequestBody Carte carte) {
-        game.checkVictory(carte);
-        return ResponseEntity.ok("victory");
+    @PostMapping("/game/check-victory")
+    public ResponseEntity<Boolean> checkVictory(@RequestBody Carte carte) {
+        boolean isVictory = game.checkVictory(carte);
+        return ResponseEntity.ok(isVictory);
     }
+
 
     @PostMapping("/game/tirer")
     public ResponseEntity<Integer> tirer(

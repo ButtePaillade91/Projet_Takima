@@ -152,36 +152,41 @@ export class HomeComponent implements OnInit{
 
 
   async waitForPlayerTurn(): Promise<void> {
-    // Wait for a player action (e.g., clicking a cell on the game board)
     return new Promise((resolve) => {
-      // Add an event listener or hook into your UI logic
-      const clickListener = (event: any) => {
-        const i = event.detail.row; // Example: Row index from event details
-        const j = event.detail.column; // Example: Column index from event details
+      const board = document.querySelectorAll('.battleship-board')[1]; // Opponent board
+      const cells = board.querySelectorAll('.cell');
 
-        // Ensure the event calls handleClick and resolves only when a real move happens
-        this.handleClick(i, j)
+      const handleCellClick = (event: Event) => {
+        const target = event.target as HTMLElement;
+        const row = parseInt(target.dataset["row"]!);
+        const column = parseInt(target.dataset["column"]!);
+
+        // Call handleClick and wait for it to finish
+        this.handleClick(row, column)
           .then(() => {
-            document.removeEventListener('playerClick', clickListener); // Cleanup listener
-            resolve(); // Resolve after the player's turn is completed
+            cells.forEach((cell) => cell.removeEventListener('click', handleCellClick)); // Remove listeners
+            resolve(); // Resolve the promise after the turn
           })
           .catch((error) => {
-            console.error('Error during player turn:', error);
-            document.removeEventListener('playerClick', clickListener); // Cleanup on error
+            console.error('Error during handleClick:', error);
+            cells.forEach((cell) => cell.removeEventListener('click', handleCellClick)); // Cleanup on error
           });
       };
 
-      // Listen for a custom event fired by your UI (e.g., a grid click)
-      document.addEventListener('playerClick', clickListener);
+      // Attach click listeners to opponent board cells
+      cells.forEach((cell) => {
+        cell.addEventListener('click', handleCellClick);
+      });
     });
   }
+
 
 
   computerTurn(carte: Carte): Promise<void> {
     return new Promise((resolve, reject) => {
       this.gameService.computerTurn(carte).subscribe({
-        next: (result: any) => {
-          console.log('Computer turn completed:', result);
+        next: (message) => {
+          console.log(message);
           resolve();
         },
         error: (err: any) => {

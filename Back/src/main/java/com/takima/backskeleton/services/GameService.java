@@ -32,24 +32,34 @@ public class GameService {
 
     public void computerTurn(Carte carteJoueur) {
         System.out.println("Tour de l'ordinateur...");
+        try {
+            // Logique pour déterminer les coordonnées du tir de l'ordinateur
+            int x = new Random().nextInt(10); // Coordonnée aléatoire entre 0 et 9
+            int y = new Random().nextInt(10); // Coordonnée aléatoire entre 0 et 9
+            System.out.println("Ordinateur tire sur les coordonnées : (" + x + ", " + y + ")");
 
-        // Logique pour déterminer les coordonnées du tir de l'ordinateur
-        int x = new Random().nextInt(10); // Coordonnée aléatoire entre 0 et 9
-        int y = new Random().nextInt(10); // Coordonnée aléatoire entre 0 et 9
+            int result = tirer(x, y, carteJoueur); // Appeler la méthode tirer
 
-        int result = tirer(x, y, carteJoueur);
+            // Optionally log the result
+            System.out.println("Résultat du tir : " + result);
+        } catch (Exception e) {
+            System.err.println("Erreur pendant le tour de l'ordinateur : " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
 
-    public void checkVictory(Carte carte) {
+
+    public boolean checkVictory(Carte carte) {
         // Vérifie si tous les bateaux ont été coulés
         for (int i = 0; i < carte.grille.length; i++) {
             for (int j = 0; j < carte.grille[i].length; j++) {
                 if (carte.grille[i][j].bateauOccupe != null) {
-                    return; // Il reste des bateaux, donc pas de victoire
+                    return false; // Il reste des bateaux, donc pas de victoire
                 }
             }
         }
+        return true; // Tous les bateaux ont été coulés, victoire
     }
 
     public void shipPlacement(Carte carte, List<Bateau> bateau) {

@@ -70,11 +70,18 @@
     </div>
   </div>
 
+
   <!-- Opponent board -->
   <div class="battleship-board">
     <div class="row" *ngFor="let row of carteAdversaire.grille; let i = index">
-      <button class="cell" *ngFor="let cell of carteAdversaire.grille; let j = index" (click)="handleClick(i, j)"></button>
+      <button
+        class="cell"
+        *ngFor="let cell of row; let j = index"
+        [attr.data-row]="i"
+        [attr.data-column]="j"
+      ></button>
     </div>
   </div>
+
 
 </div>

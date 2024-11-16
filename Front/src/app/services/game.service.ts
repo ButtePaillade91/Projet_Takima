@@ -51,12 +51,14 @@ export class GameService {
   // Trigger a computer's turn (custom endpoint)
   computerTurn(carte: Carte): Observable<string> {
     const url = `${this.baseUrl}/game/computer-turn`;
-    return this.http.post<string>(url, {carte});
+    return this.http.post(url, carte, { responseType: 'text' });
   }
 
-  checkVictory(carte: Carte): Observable<string> {
+
+
+  checkVictory(carte: Carte): Observable<boolean> {
     const url = `${this.baseUrl}/game/check-victory`;
-    return this.http.post<string>(url, {carte});
+    return this.http.post<boolean>(url, carte); // Directly pass the `Carte` object
   }
 
   // Get the current state of the game
