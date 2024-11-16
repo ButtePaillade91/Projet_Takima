@@ -2,11 +2,13 @@ package com.takima.backskeleton.services;  // Vérifiez que c'est bien le bon pa
 
 import com.takima.backskeleton.models.Bateau;
 import com.takima.backskeleton.models.Carte;
+import com.takima.backskeleton.models.Cellule;
 import com.takima.backskeleton.models.Joueur;
 import org.springframework.stereotype.Service;
 import lombok.Setter;
 import lombok.Getter;
 
+import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -28,50 +30,15 @@ public class GameService {
         this.carteOrdinateur = carteOrdinateur;
     }
 
-    public void startGame(Joueur joueur, Joueur ordinateur, Carte carteJoueur, Carte carteOrdinateur) {
-        System.out.println("La bataille commence !");
 
-        shipPlacement(carteOrdinateur, ordinateur, carteJoueur, joueur);
-
-        // Boucle de jeu où le joueur et l'ordinateur s'alternent
-        while (true) {
-            if (playerTurn(joueur, carteOrdinateur)) {
-                System.out.println("Vous avez gagné !");
-                break;
-            }
-            if (computerTurn(ordinateur, carteJoueur)) {
-                System.out.println("L'ordinateur a gagné !");
-                break;
-            }
-        }
-    }
-
-    // La méthode playerTurn() prend maintenant les entrées de l'utilisateur directement
-    public boolean playerTurn(Joueur joueur, Carte carteOrdinateur) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Votre tour: Entrez les coordonnées (x, y) et le type de munition :");
-
-        System.out.print("Coordonnée x: ");
-        int x = scanner.nextInt();
-
-        System.out.print("Coordonnée y: ");
-        int y = scanner.nextInt();
-
-        // Appel de la méthode tir avec les entrées de l'utilisateur
-        int result = joueur.tirer(x, y, carteOrdinateur);
-        displayShotResult(result);
-
-        return checkVictory(carteOrdinateur); // Vérifie si l'ordinateur a perdu
-    }
-
-    public boolean computerTurn(Joueur ordinateur, Carte carteJoueur) {
+    public boolean computerTurn(Carte carteJoueur) {
         System.out.println("Tour de l'ordinateur...");
 
         // Logique pour déterminer les coordonnées du tir de l'ordinateur
         int x = new Random().nextInt(10); // Coordonnée aléatoire entre 0 et 9
         int y = new Random().nextInt(10); // Coordonnée aléatoire entre 0 et 9
 
-        int result = ordinateur.tirer(x, y, carteJoueur);
+        int result = tirer(x, y, carteJoueur);
         displayShotResult(result);
 
         return checkVictory(carteJoueur); // Vérifie si le joueur a perdu
@@ -87,9 +54,6 @@ public class GameService {
                 break;
             case 2:
                 System.out.println("Coulé !");
-                break;
-            case 3:
-                System.out.println("Explosion en fragment !");
                 break;
             default:
                 System.out.println("Résultat inconnu.");
@@ -109,19 +73,14 @@ public class GameService {
         return true; // Tous les bateaux sont coulés, victoire
     }
 
-    public void shipPlacement(Carte carteOrdinateur, Joueur ordinateur, Carte carteJoueur, Joueur joueur) {
+    public void shipPlacement(Carte carte, List<Bateau> bateau) {
 
         Random rand = new Random();
-        int[] taillesBateaux = {5, 4, 3, 3, 2}; // Sizes of the ships
 
         // Place ships for both the ordinateur and the joueur
-        for (int i = 0; i < taillesBateaux.length; i++) {
+        for (int i = 0; i < 5; i++) {
             // Place ship for ordinateur
-            Bateau bateauOrdinateur = new Bateau();
-            bateauOrdinateur.setTaille(taillesBateaux[i]);
-            bateauOrdinateur.setVie(taillesBateaux[i]);
-            bateauOrdinateur.setType_bateau("Bateau" + (i + 1));
-
+            Bateau bateauOrdinateur = bateau.get(i);
 
             boolean bateauOrdinateurPlace = false;
             while (!bateauOrdinateurPlace) {
@@ -129,28 +88,9 @@ public class GameService {
                 int y = rand.nextInt(10);
                 int orientation = rand.nextInt(2); // 0 for horizontal, 1 for vertical
 
-                if (isValidPlacement(x, y, orientation, bateauOrdinateur.getTaille(), carteOrdinateur)) {
-                    placeShip(x, y, orientation, bateauOrdinateur, carteOrdinateur);
+                if (isValidPlacement(x, y, orientation, bateauOrdinateur.getTaille(), carte)) {
+                    placeShip(x, y, orientation, bateauOrdinateur, carte);
                     bateauOrdinateurPlace = true;
-                }
-            }
-
-            // Place ship for joueur
-            Bateau bateauJoueur = new Bateau();
-            bateauJoueur.setTaille(taillesBateaux[i]);
-            bateauJoueur.setVie(taillesBateaux[i]);
-            bateauJoueur.setType_bateau("Bateau" + (i + 1));
-
-
-            boolean bateauJoueurPlace = false;
-            while (!bateauJoueurPlace) {
-                int x = rand.nextInt(10);
-                int y = rand.nextInt(10);
-                int orientation = rand.nextInt(2); // 0 for horizontal, 1 for vertical
-
-                if (isValidPlacement(x, y, orientation, bateauJoueur.getTaille(), carteJoueur)) {
-                    placeShip(x, y, orientation, bateauJoueur, carteJoueur);
-                    bateauJoueurPlace = true;
                 }
             }
         }
@@ -187,4 +127,27 @@ public class GameService {
             }
         }
     }
+
+    public int tirer(int position_x, int position_y, Carte map) {
+        int resultat = 0; //dans l'eau
+
+        Cellule cellule = map.getGrille()[position_x][position_y];
+
+        // Munition basique
+        if (cellule.getBateauOccupe() != null) {
+            cellule.getBateauOccupe().setVie(cellule.getBateauOccupe().getVie() - 1);
+
+            if (cellule.getBateauOccupe().getVie() <= 0) {
+                map.Toucher(map.getGrille(), position_x, position_y);
+                resultat = 2; // Coulé
+            } else {
+                map.Toucher(map.getGrille(), position_x, position_y);
+                resultat = 1; // Touché
+            }
+        }
+
+
+        return resultat;
+    }
+
 }

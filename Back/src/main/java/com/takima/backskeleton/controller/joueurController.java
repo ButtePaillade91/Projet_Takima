@@ -38,16 +38,5 @@ public class joueurController {
         joueurService.deleteJoueur(id);
     }
 
-    @PostMapping("/joueur/{id}/tirer")
-    public ResponseEntity<Integer> tirer(
-            @PathVariable int id,
-            @RequestParam int positionX,
-            @RequestParam int positionY,
-            @RequestBody Carte carte) {
-
-        int result = joueurService.tirer(id, positionX, positionY, carte);
-        return ResponseEntity.ok(result);
-    }
-
 }
 

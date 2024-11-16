@@ -27,38 +27,4 @@ public class Joueur {
     }
 
 
-
-    public int tirer(int position_x, int position_y, Carte map) {
-        int resultat = 0; //dans l'eau
-
-        // Vérifie les limites de la grille pour éviter une sortie de tableau
-        if (position_x < 0 || position_x >= 10 || position_y < 0 || position_y >= 10) {
-            System.out.println("Tir en dehors de la carte !");
-            return resultat;
-        }
-
-        Cellule cellule = map.getGrille()[position_x][position_y];
-
-        // Munition basique
-        if (cellule.getBateauOccupe() != null) {
-            cellule.getBateauOccupe().setVie(cellule.getBateauOccupe().getVie() - 1);
-
-            if (cellule.getBateauOccupe().getVie() <= 0) {
-                    map.Toucher(map.getGrille(), position_x, position_y);
-                    resultat = 2; // Coulé
-            } else {
-                    map.Toucher(map.getGrille(), position_x, position_y);
-                    resultat = 1; // Touché
-            }
-        }
-
-
-        return resultat;
-    }
-
-
-
-
-
-
 }

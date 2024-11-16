@@ -33,16 +33,4 @@ public class joueurService {
         joueurRepository.deleteById(id);
     }
 
-    // Logique de tir (si nécessaire)
-    @Transactional
-    public int tirer(int idJoueur, int positionX, int positionY, Carte carte) {
-        Joueur joueur = getJoueurById(idJoueur);
-
-        if (joueur != null) {
-            // Appelle la méthode "tirer" dans l'entité Joueur
-            return joueur.tirer(positionX, positionY, carte);
-        }
-
-        return -1; // Joueur introuvable
-    }
 }

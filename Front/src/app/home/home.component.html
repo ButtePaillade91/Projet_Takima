@@ -7,46 +7,74 @@
 <span class="title">Nouvelle Partie !</span>
 <button type="button" class="btn btn-success" (click)="openModal()">ICI !</button>
 
-<!-- Conteneur de la modale -->
+<!-- Modal -->
 <div class="modal" tabindex="-1" role="dialog" [ngClass]="{'show': isModalOpen}" style="display: block;" *ngIf="isModalOpen">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Entrez votre pseudo</h5>
+        <h5 class="modal-title">Sélectionnez ou créez un joueur</h5>
         <button type="button" class="close" (click)="closeModal()">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        <input type="text" [(ngModel)]="pseudo" placeholder="Pseudo" class="form-control">
+        <!-- Dropdown for existing players -->
+        <label for="existing-joueur">Joueurs existants :</label>
+        <select class="form-control" id="existing-joueur" [(ngModel)]="selectedJoueurId">
+          <option [ngValue]="null">-- Sélectionner un joueur --</option>
+          <option *ngFor="let joueur of joueurs" [ngValue]="joueur.id">
+            {{ joueur.pseudo }}
+          </option>
+        </select>
+
+        <hr />
+
+        <!-- Input for a new player -->
+        <label for="new-joueur">Ou créez un nouveau joueur :</label>
+        <input type="text" [(ngModel)]="pseudo" id="new-joueur" placeholder="Pseudo" class="form-control">
+
+        <hr />
+
       </div>
+
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" (click)="startGame()">Valider</button>
+        <!-- Disable button if conditions are not met -->
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="startGame()"
+        >
+          Valider
+        </button>
         <button type="button" class="btn btn-secondary" (click)="closeModal()">Annuler</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Les pseudos ne sont affichés que si showNames est vrai -->
+
+<!-- Display player names -->
 <div *ngIf="showNames">
   <div class="player-name">{{ joueur.pseudo }}</div>
   <div class="ordi-name">{{ "Adversaire" }}</div>
 </div>
 
-<!-- Grilles de jeu -->
-<div class="boards-container">
-  <!-- Première grille (joueur) -->
+<!-- Game boards -->
+<div class="boards-container" *ngIf="carte && carteAdversaire">
+
+  <!-- Player board -->
   <div class="battleship-board">
-    <div class="row" *ngFor="let row of [].constructor(10); let i = index">
-      <button class="cell" *ngFor="let cell of [].constructor(10); let j = index" (click)="handleClick(i, j)"></button>
+    <div class="row" *ngFor="let row of carte.grille; let i = index">
+      <button class="cell" *ngFor="let cell of carte.grille; let j = index" >
+      </button>
     </div>
   </div>
 
-  <!-- Deuxième grille (adversaire) -->
+  <!-- Opponent board -->
   <div class="battleship-board">
-    <div class="row" *ngFor="let row of [].constructor(10); let i = index">
-      <button class="cell" *ngFor="let cell of [].constructor(10); let j = index" (click)="handleClick(i, j)"></button>
+    <div class="row" *ngFor="let row of carteAdversaire.grille; let i = index">
+      <button class="cell" *ngFor="let cell of carteAdversaire.grille; let j = index" (click)="handleClick(i, j)"></button>
     </div>
   </div>
+
 </div>

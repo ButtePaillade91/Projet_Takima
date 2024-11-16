@@ -10,6 +10,7 @@ export interface Joueur {
 
 export interface Carte {
   id?: number;
+  nom_carte: string;
   grille?: Cellule[][];
 }
 
@@ -41,31 +42,16 @@ export class GameService {
 
   /** GameController Methods */
 
-  // Start a new game
-  startGame(joueur: Joueur): Observable<string> {
-    const url = `${this.baseUrl}/game/start`;
-    return this.http.post<string>(url, joueur);
-  }
-
-  // Trigger a player's turn (custom endpoint)
-  playerTurn(
-    positionX: number,
-    positionY: number,
-
-  ): Observable<string> {
-    const url = `${this.baseUrl}/game/player-turn`;
-    const params = {
-      positionX: positionX.toString(),
-      positionY: positionY.toString(),
-
-    };
-    return this.http.post<string>(url, {}, { params });
+  /** Ship placement */
+  shipPlacement(carte: Carte, bateaux: Bateau[]): Observable<string> {
+    const url = `${this.baseUrl}/game/ship-placement`;
+    return this.http.post<string>(url, {carte, bateaux});
   }
 
   // Trigger a computer's turn (custom endpoint)
-  computerTurn(): Observable<string> {
+  computerTurn(carte: Carte): Observable<string> {
     const url = `${this.baseUrl}/game/computer-turn`;
-    return this.http.post<string>(url, {});
+    return this.http.post<string>(url, {carte});
   }
 
   // Get the current state of the game
@@ -97,18 +83,17 @@ export class GameService {
   }
 
   tirer(
-    id: number,
     positionX: number,
     positionY: number,
     carte: Carte
   ): Observable<number> {
-    const url = `${this.baseUrl}/joueur/${id}/tirer`;
+    const url = `${this.baseUrl}/game/tirer`;
     const params = {
-      positionX: positionX.toString(),
-      positionY: positionY.toString(),
+      positionX: positionX,
+      positionY: positionY,
 
     };
-    return this.http.post<number>(url, { carte}, { params });
+    return this.http.post<number>(url, carte, { params });  // Send carte as the body
   }
 
   /** BateauController Methods */

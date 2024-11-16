@@ -2,6 +2,7 @@ package com.takima.backskeleton.controller;
 
 import com.takima.backskeleton.models.Carte;
 import com.takima.backskeleton.models.Joueur;
+import com.takima.backskeleton.models.PoserBateau;
 import com.takima.backskeleton.services.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,44 +21,22 @@ public class GameController {
         this.game = gameService;
     }
 
-    // Start a new game
-    @PostMapping("/game/start")
-    public ResponseEntity<Map<String, String>> startGame(@RequestBody Joueur joueur, Carte carte) {
-        // Create opponent and boards
-        Joueur ordinateur = new Joueur();
-        Carte carteJoueur = carte;
-        Carte carteOrdinateur = carte;
 
-        // Initialize the game
-        game.setJoueur(joueur);
-        game.setOrdinateur(ordinateur);
-        game.setCarteJoueur(carteJoueur);
-        game.setCarteOrdinateur(carteOrdinateur);
-
-        // Place ships randomly
-        game.shipPlacement(carteOrdinateur, ordinateur, carteJoueur, joueur);
-
-        // Return a success response
-        return ResponseEntity.ok(Map.of("message", "Jeu démarré avec succès !"));
+    // New endpoint for ship placement
+    @PostMapping("/game/ship-placement")
+    public ResponseEntity<Map<String, String>> shipPlacement(
+            @RequestBody PoserBateau poserBateau) {
+        game.shipPlacement(poserBateau.getCarte(), poserBateau.getBateaux());
+        return ResponseEntity.ok(Map.of("message", "Placement des bateaux terminé !"));
     }
 
-    // Player's turn
-    @PostMapping("/game/player-turn")
-    public ResponseEntity<Map<String, Object>> playerTurn(
-            @RequestParam int x,
-            @RequestParam int y,
-            @RequestParam int munitionType) {
-        boolean result = game.playerTurn(game.getJoueur(), game.getCarteOrdinateur());
-        return ResponseEntity.ok(Map.of(
-                "message", result ? "Vous avez gagné !" : "Tour terminé.",
-                "victory", result
-        ));
-    }
 
     // Computer's turn
     @GetMapping("/game/computer-turn")
-    public ResponseEntity<Map<String, Object>> computerTurn() {
-        boolean result = game.computerTurn(game.getOrdinateur(), game.getCarteJoueur());
+    public ResponseEntity<Map<String, Object>> computerTurn(
+            @RequestBody Carte carte
+    ) {
+        boolean result = game.computerTurn( carte);
         return ResponseEntity.ok(Map.of(
                 "message", result ? "L'ordinateur a gagné !" : "Tour terminé.",
                 "victory", result
@@ -77,4 +56,15 @@ public class GameController {
         }
         return ResponseEntity.ok(Map.of("victory", victory));
     }
+
+    @PostMapping("/game/tirer")
+    public ResponseEntity<Integer> tirer(
+            @RequestBody Carte carte, // Wrap both joueur and carte
+            @RequestParam int positionX,
+            @RequestParam int positionY
+    ) {
+        int result = game.tirer( positionX, positionY, carte);
+        return ResponseEntity.ok(result);
+    }
+
 }
